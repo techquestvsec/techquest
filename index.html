@@ -317,7 +317,7 @@ async function submitRegistration() {
   // Scholar number validation
   const scholarNum = parseInt(scholar);
   if (!/^\d+$/.test(scholar) || isNaN(scholarNum) || scholarNum < 8000 || scholarNum > 15000) {
-    return showToast('Invalid scholar number! Must be between 8000 and 15000.', true);
+    return showToast('Invalid scholar number!', true);
   }
 
   const btn = document.getElementById('reg-btn');
@@ -539,3 +539,4 @@ function showToast(msg, isErr=false) {
 </script>
 </body>
 </html>
+
