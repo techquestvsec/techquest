@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tech Quest — Registration</title>
+<title>Tech Quest — Admin</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -19,13 +19,9 @@
   .container{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:0 20px;}
   header{padding:40px 0 30px;text-align:center;}
   .logo-tag{font-family:'Orbitron',monospace;font-size:11px;letter-spacing:4px;color:var(--accent);text-transform:uppercase;opacity:.7;margin-bottom:12px;}
-  h1{font-family:'Orbitron',monospace;font-size:clamp(2.5rem,7vw,5rem);font-weight:900;background:linear-gradient(135deg,#fff 0%,var(--accent) 50%,var(--accent2) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;}
+  h1{font-family:'Orbitron',monospace;font-size:clamp(2rem,5vw,3.5rem);font-weight:900;background:linear-gradient(135deg,#fff 0%,var(--accent) 50%,var(--accent2) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;}
   .subtitle{font-size:13px;color:var(--muted);margin-top:10px;letter-spacing:2px;text-transform:uppercase;}
-  .tabs{display:flex;gap:4px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:4px;margin:30px auto 0;max-width:400px;}
-  .tab{flex:1;padding:10px 20px;border:none;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;letter-spacing:1px;text-transform:uppercase;transition:all .2s;background:transparent;color:var(--muted);}
-  .tab.active{background:var(--accent);color:#000;box-shadow:var(--glow);}
-  .panel{display:none;padding:40px 0 60px;animation:fadeIn .3s ease;}
-  .panel.active{display:block;}
+  .panel{padding:40px 0 60px;animation:fadeIn .3s ease;}
   @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
   .card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:36px;position:relative;overflow:hidden;}
   .card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--accent),transparent);}
@@ -78,6 +74,24 @@
   .chip{padding:5px 14px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:12px;cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif;}
   .chip.active{background:rgba(0,229,255,.1);color:var(--accent);border-color:var(--accent);}
   .session-info{font-size:11px;color:var(--muted);margin-left:auto;}
+  .cb-wrap{display:flex;align-items:center;justify-content:center;}
+  input[type="checkbox"]{width:16px;height:16px;accent-color:var(--accent);cursor:pointer;}
+  .btn-delete-sel{background:transparent;color:#ff4757;border:1px solid rgba(255,71,87,.4);font-size:11px;padding:10px 20px;border-radius:8px;cursor:pointer;font-family:'Orbitron',monospace;font-weight:700;letter-spacing:2px;text-transform:uppercase;transition:all .2s;display:none;}
+  .btn-delete-sel:hover{background:rgba(255,71,87,.1);}
+  .btn-delete-sel.visible{display:block;}
+  tbody tr.selected{background:rgba(255,71,87,0.05)!important;}
+  .search-wrap{position:relative;flex:2;min-width:180px;}
+  .search-wrap input{padding-left:36px;}
+  .search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;pointer-events:none;}
+  .event-counts{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-bottom:24px;}
+  .event-count-card{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;}
+  .event-count-name{font-size:12px;color:var(--text);}
+  .event-count-num{font-family:'Orbitron',monospace;font-size:16px;font-weight:700;color:var(--accent);}
+  .event-counts-title{font-family:'Orbitron',monospace;font-size:11px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:12px;}
+  .edit-input{background:var(--surface2);border:1px solid var(--accent);border-radius:6px;padding:4px 8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;width:100%;outline:none;}
+  .btn-save{background:var(--green);color:#000;border:none;border-radius:6px;padding:5px 10px;font-size:10px;font-family:'Orbitron',monospace;font-weight:700;cursor:pointer;letter-spacing:1px;}
+  .btn-edit{background:transparent;color:var(--accent);border:1px solid rgba(0,229,255,0.3);padding:5px 10px;font-size:10px;border-radius:6px;cursor:pointer;font-family:'Orbitron',monospace;font-weight:700;letter-spacing:1px;}
+  @media(max-width:600px){.event-counts{grid-template-columns:1fr 1fr;}}
 </style>
 </head>
 <body>
@@ -86,49 +100,11 @@
   <header>
     <div class="logo-tag">&#9670; Dr. Virendra Swarup Education Center &#9670;</div>
     <h1>TECH QUEST</h1>
-    <div class="subtitle">Solve ,Build & Lead The Code — Event Registration</div>
-    <div class="tabs">
-      <button class="tab active" onclick="switchTab('register')">Register</button>
-      <button class="tab" onclick="switchTab('admin')">Admin</button>
-    </div>
+    <div class="subtitle">Admin Panel</div>
   </header>
 
-  <!-- REGISTER -->
-  <div id="panel-register" class="panel active">
-    <div class="card">
-      <div class="card-title">Student Registration</div>
-      <div class="form-grid">
-        <div class="form-group">
-          <label>Full Name</label>
-          <input type="text" id="reg-name" placeholder="Enter your full name">
-        </div>
-        <div class="form-group">
-          <label>Scholar Number</label>
-          <input type="text" id="reg-scholar" placeholder="e.g. 2024001">
-        </div>
-        <div class="form-group">
-          <label>Class</label>
-          <select id="reg-class">
-            <option value="">— Select Class —</option>
-            <option>Class 5A</option><option>Class 5B</option><option>Class 5C</option><option>Class 5D</option><option>Class 5E</option><option>Class 6A</option><option>Class 6B</option><option>Class 6C</option><option>Class 6D</option><option>Class 6E</option><option>Class 7A</option><option>Class 7B</option><option>Class 7C</option><option>Class 7D</option><option>Class 7E</option><option>Class 8A</option><option>Class 8B</option><option>Class 8C</option><option>Class 8D</option><option>Class 8E</option><option>Class 9A</option><option>Class 9B</option><option>Class 9C</option><option>Class 9D</option><option>Class 10A</option><option>Class 10B</option><option>Class 10C</option><option>Class 10D</option><option>Class 11A</option><option>Class 11B</option><option>Class 11C</option><option>Class 11D</option><option>Class 12A</option><option>Class 12B</option><option>Class 12C</option><option>Class 12D</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Event</label>
-          <select id="reg-event">
-            <option value="">— Select Event —</option>
-            <option>Codezilla</option><option>Kill D’ Bug</option><option>Algorithm Making</option><option>Robotics</option><option>Pivot Animation</option><option>Slide Master</option><option>PixBit</option><option>Debate</option><option>Ham the Jam</option><option>From the Scratch</option><option>Digital Playground</option><option>Animatrix</option><option>Weave the Web</option><option>Pixelated</option><option>Cinematic Cuts</option><option>Fade The Track</option><option>Frame D Flash</option><option>Tech Quiz</option><option>Do DubDUB</option><option>Scavenger Hunt</option>
-          </select>
-        </div>
-      </div>
-      <div class="submit-row">
-        <button class="btn btn-primary" id="reg-btn" onclick="submitRegistration()">Register &#8594;</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ADMIN -->
-  <div id="panel-admin" class="panel">
+  <div class="panel">
+    <!-- LOGIN -->
     <div id="admin-login" class="login-box">
       <div class="card">
         <div class="card-title">Admin Access</div>
@@ -140,10 +116,11 @@
         <div class="submit-row">
           <button class="btn btn-primary" id="login-btn" onclick="adminLogin()">Login &#8594;</button>
         </div>
-        <p style="font-size:11px;color:var(--muted);margin-top:16px;text-align:center;">Password is verified securely via Google Sheets &#128274;</p>
+        <p style="font-size:11px;color:var(--muted);margin-top:16px;text-align:center;">Password verified securely via Google Sheets &#128274;</p>
       </div>
     </div>
 
+    <!-- DASHBOARD -->
     <div id="admin-dashboard" style="display:none;">
       <div class="stats-row">
         <div class="stat"><div class="stat-num" id="stat-total">—</div><div class="stat-label">Total Entries</div></div>
@@ -153,23 +130,33 @@
       <div class="card">
         <div class="card-title">All Registrations <span class="session-info" id="session-info"></span></div>
         <div class="admin-toolbar">
-          <select class="sort-select" id="sort-by" onchange="renderTable()">
-            <option value="time">Sort: Latest First</option>
-            <option value="Name">Sort: Name (A–Z)</option>
-            <option value="Class">Sort: Class</option>
-            <option value="Event">Sort: Event</option>
-            <option value="Scholar Number">Sort: Scholar No.</option>
+          <div class="search-wrap">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="search-box" placeholder="Search name, scholar, class..." oninput="renderTable()" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:9px 14px 9px 36px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;width:100%;">
+          </div>
+          <select class="sort-select" id="sort-by" onchange="renderTable()" style="flex:none;width:auto;">
+            <option value="time">Latest First</option>
+            <option value="Name">Name (A–Z)</option>
+            <option value="Class">Class</option>
+            <option value="Event">Event</option>
+            <option value="Scholar Number">Scholar No.</option>
           </select>
-          <button class="btn btn-secondary" onclick="openAddModal()">+ Add Entry</button>
-          <button class="btn btn-secondary" onclick="loadData()">&#8635; Refresh</button>
-          <button class="btn btn-green" onclick="exportCSV()">Export CSV</button>
+          <button class="btn btn-secondary" onclick="openAddModal()">+ Add</button>
+          <button class="btn-delete-sel" id="btn-delete-sel" onclick="deleteSelected()">🗑 (<span id="sel-count">0</span>)</button>
+          <button class="btn btn-secondary" onclick="loadData()">&#8635;</button>
+          <button class="btn btn-green" onclick="showExportMenu()">Export ▾</button>
           <button class="btn btn-secondary" onclick="adminLogout()">Logout</button>
+        </div>
+        <div id="export-menu" style="display:none;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:10px;margin-bottom:16px;display:none;flex-wrap:wrap;gap:8px;" id="export-menu"></div>
+        <div id="event-counts-wrap" style="margin-bottom:20px;display:none;">
+          <div class="event-counts-title">Registrations per Event</div>
+          <div class="event-counts" id="event-counts"></div>
         </div>
         <div class="filter-bar" id="filter-bar"></div>
         <div id="table-loading" class="loading" style="display:none;"><span class="spinner"></span>Loading from Google Sheets...</div>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>#</th><th>Name</th><th>Scholar No.</th><th>Class</th><th>Event</th><th>Registered</th><th>Action</th></tr></thead>
+            <thead><tr><th><input type="checkbox" id="select-all" onchange="toggleSelectAll(this)"></th><th>#</th><th>Name</th><th>Scholar No.</th><th>Class</th><th>Event</th><th>Registered</th><th>Action</th></tr></thead>
             <tbody id="table-body"></tbody>
           </table>
           <div id="empty-state" class="empty-state" style="display:none;">No registrations yet.</div>
@@ -189,11 +176,28 @@
       <div class="form-group"><label>Scholar Number</label><input type="text" id="m-scholar" placeholder="Scholar no."></div>
       <div class="form-group">
         <label>Class</label>
-        <select id="m-class"><option value="">— Select —</option><option>Class 5A</option><option>Class 5B</option><option>Class 5C</option><option>Class 5D</option><option>Class 5E</option><option>Class 6A</option><option>Class 6B</option><option>Class 6C</option><option>Class 6D</option><option>Class 6E</option><option>Class 7A</option><option>Class 7B</option><option>Class 7C</option><option>Class 7D</option><option>Class 7E</option><option>Class 8A</option><option>Class 8B</option><option>Class 8C</option><option>Class 8D</option><option>Class 8E</option><option>Class 9A</option><option>Class 9B</option><option>Class 9C</option><option>Class 9D</option><option>Class 10A</option><option>Class 10B</option><option>Class 10C</option><option>Class 10D</option><option>Class 11A</option><option>Class 11B</option><option>Class 11C</option><option>Class 11D</option><option>Class 12A</option><option>Class 12B</option><option>Class 12C</option><option>Class 12D</option></select>
+        <select id="m-class">
+          <option value="">— Select —</option>
+          <option>Class 5A</option><option>Class 5B</option><option>Class 5C</option><option>Class 5D</option><option>Class 5E</option>
+          <option>Class 6A</option><option>Class 6B</option><option>Class 6C</option><option>Class 6D</option><option>Class 6E</option>
+          <option>Class 7A</option><option>Class 7B</option><option>Class 7C</option><option>Class 7D</option><option>Class 7E</option>
+          <option>Class 8A</option><option>Class 8B</option><option>Class 8C</option><option>Class 8D</option><option>Class 8E</option>
+          <option>Class 9A</option><option>Class 9B</option><option>Class 9C</option><option>Class 9D</option>
+          <option>Class 10A</option><option>Class 10B</option><option>Class 10C</option><option>Class 10D</option>
+          <option>Class 11A</option><option>Class 11B</option><option>Class 11C</option><option>Class 11D</option>
+          <option>Class 12A</option><option>Class 12B</option><option>Class 12C</option><option>Class 12D</option>
+        </select>
       </div>
       <div class="form-group">
         <label>Event</label>
-        <select id="m-event"><option value="">— Select —</option><option>Codezilla</option><option>Kill D’ Bug</option><option>Algorithm Making</option><option>Robotics</option><option>Pivot Animation</option><option>Slide Master</option><option>PixBit</option><option>Debate</option><option>Ham the Jam</option><option>From the Scratch</option><option>Digital Playground</option><option>Animatrix</option><option>Weave the Web</option><option>Pixelated</option><option>Cinematic Cuts</option><option>Fade The Track</option><option>Frame D Flash</option><option>Tech Quiz</option><option>Do DubDUB</option><option>Scavenger Hunt</option></select>
+        <select id="m-event">
+          <option value="">— Select —</option>
+          <option>Codezilla</option><option>Kill D' Bug</option><option>Algorithm Making</option><option>Robotics</option>
+          <option>Pivot Animation</option><option>Slide Master</option><option>PixBit</option><option>Debate</option>
+          <option>Ham the Jam</option><option>From the Scratch</option><option>Digital Playground</option><option>Animatrix</option>
+          <option>Weave the Web</option><option>Pixelated</option><option>Cinematic Cuts</option><option>Fade The Track</option>
+          <option>Frame D Flash</option><option>Tech Quiz</option><option>Do DubDUB</option><option>Scavenger Hunt</option>
+        </select>
       </div>
     </div>
     <div class="sr-row">
@@ -206,168 +210,62 @@
 <div class="toast" id="toast"></div>
 
 <script>
-// ── PASTE YOUR GOOGLE APPS SCRIPT URL HERE ──────────────
-const SCRIPT_URL =  'https://script.google.com/macros/s/AKfycby8QpcZVkLv4Vn0I7D1EsmZsXU_Lc2TZp82cMPYHhq_YRyqxpexueKVc7nT3degmT8NkA/exec';
-// ────────────────────────────────────────────────────────
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby8QpcZVkLv4Vn0I7D1EsmZsXU_Lc2TZp82cMPYHhq_YRyqxpexueKVc7nT3degmT8NkA/exec';
 
 let allData = [];
 let activeFilter = null;
 let sessionToken = null;
 let sessionExpiry = null;
 
-// ── DEVICE FINGERPRINT ───────────────────────────────────
-function getDeviceId() {
-  let id = localStorage.getItem('tq_device_id');
-  if (!id) {
-    const raw = [
-      navigator.userAgent,
-      navigator.language,
-      screen.width + 'x' + screen.height,
-      screen.colorDepth,
-      new Date().getTimezoneOffset(),
-      navigator.hardwareConcurrency || '',
-      navigator.platform || ''
-    ].join('|');
-    let hash = 0;
-    for (let i = 0; i < raw.length; i++) {
-      hash = ((hash << 5) - hash) + raw.charCodeAt(i);
-      hash |= 0;
-    }
-    id = 'dev_' + Math.abs(hash) + '_' + Date.now();
-    localStorage.setItem('tq_device_id', id);
-  }
-  return id;
-}
-
-// ── MIDNIGHT WIPE ────────────────────────────────────────
 function getStoredSession() {
   try {
     const raw = localStorage.getItem('tq_session');
     if (!raw) return null;
     const data = JSON.parse(raw);
-    // Check if stored date is today
     const today = new Date().toLocaleDateString('en-IN');
-    if (data.date !== today) {
-      // It's a new day — wipe everything
-      wipeSession();
-      return null;
-    }
-    // Check if 1 hour has passed
-    if (Date.now() > data.expiry) {
-      wipeSession();
-      return null;
-    }
+    if (data.date !== today || Date.now() > data.expiry) { wipeSession(); return null; }
     return data;
-  } catch(e) {
-    wipeSession();
-    return null;
-  }
+  } catch(e) { wipeSession(); return null; }
 }
 
 function saveSession(token, expiry) {
   const today = new Date().toLocaleDateString('en-IN');
-  localStorage.setItem('tq_session', JSON.stringify({
-    token, expiry, date: today
-  }));
+  localStorage.setItem('tq_session', JSON.stringify({ token, expiry, date: today }));
 }
 
 function wipeSession() {
   localStorage.removeItem('tq_session');
-  sessionToken = null;
-  sessionExpiry = null;
+  sessionToken = null; sessionExpiry = null;
 }
 
-// ── CHECK MIDNIGHT EVERY MINUTE ──────────────────────────
 function checkMidnight() {
   const now = new Date();
-  // If it's between 00:00 and 00:01 — wipe session
   if (now.getHours() === 0 && now.getMinutes() === 0) {
-    if (sessionToken) {
-      wipeSession();
-      adminLogout();
-      showToast('Midnight reset — please login again.', true);
-    }
-    // Also reset the device ID so rate limit resets
-    localStorage.removeItem('tq_device_id');
+    if (sessionToken) { wipeSession(); adminLogout(); showToast('Midnight reset — please login again.', true); }
   }
 }
 
-// ── API ──────────────────────────────────────────────────
 async function api(params) {
-  const url = SCRIPT_URL + '?' + new URLSearchParams(params).toString();
-  const res = await fetch(url);
+  const res = await fetch(SCRIPT_URL + '?' + new URLSearchParams(params).toString());
   return res.json();
 }
 
-// ── TABS ─────────────────────────────────────────────────
-function switchTab(tab) {
-  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', ['register','admin'][i] === tab));
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  document.getElementById('panel-' + tab).classList.add('active');
-}
-
-// ── REGISTER ─────────────────────────────────────────────
-async function submitRegistration() {
-  const name = document.getElementById('reg-name').value.trim();
-  const scholar = document.getElementById('reg-scholar').value.trim();
-  const cls = document.getElementById('reg-class').value;
-  const event = document.getElementById('reg-event').value;
-  if (!name || !scholar || !cls || !event) return showToast('Please fill all fields!', true);
-
-  // Scholar number validation
-  const scholarNum = parseInt(scholar);
-  if (!/^\d+$/.test(scholar) || isNaN(scholarNum) || scholarNum < 8000 || scholarNum > 15000) {
-    return showToast('Invalid scholar number!', true);
-  }
-
-  const btn = document.getElementById('reg-btn');
-  btn.disabled = true; btn.textContent = 'Submitting...';
-
-  try {
-    const token = sessionToken || '';
-    const res = await api({ action: 'add', name, scholar, cls, event, deviceId: getDeviceId(), ...(token && { token }) });
-
-    if (res.success) {
-      ['reg-name','reg-scholar'].forEach(id => document.getElementById(id).value = '');
-      ['reg-class','reg-event'].forEach(id => document.getElementById(id).value = '');
-      showToast('✓ Registered successfully!');
-    } else if (res.error === 'RATE_LIMITED') {
-      showToast(res.message, true);
-      btn.disabled = true;
-      btn.textContent = '🚫 Limit Reached';
-      return;
-    } else {
-      showToast('Error: ' + (res.error||'Unknown'), true);
-    }
-  } catch(e) { showToast('Connection error. Try again.', true); }
-
-  btn.disabled = false; btn.textContent = 'Register →';
-}
-
-// ── ADMIN LOGIN ───────────────────────────────────────────
 async function adminLogin() {
   const password = document.getElementById('admin-pass').value;
   if (!password) return showToast('Enter a password!', true);
-
   const btn = document.getElementById('login-btn');
   const errEl = document.getElementById('login-error');
   btn.disabled = true; btn.textContent = 'Verifying...';
   errEl.style.display = 'none';
-
   try {
     const res = await api({ action: 'verify', password });
     if (res.success && res.token) {
       sessionToken = res.token;
-      sessionExpiry = Date.now() + 3600000; // 1 hour
-      // Save to localStorage with today's date
+      sessionExpiry = Date.now() + 3600000;
       saveSession(sessionToken, sessionExpiry);
       document.getElementById('admin-login').style.display = 'none';
       document.getElementById('admin-dashboard').style.display = 'block';
       document.getElementById('admin-pass').value = '';
-      document.getElementById('admin-badge').style.display = 'inline-block';
-      // Re-enable register button if rate limited
-      const regBtn = document.getElementById('reg-btn');
-      regBtn.disabled = false; regBtn.textContent = 'Register →';
       updateSessionInfo();
       loadData();
     } else {
@@ -388,46 +286,31 @@ function updateSessionInfo() {
 }
 
 function adminLogout() {
-  wipeSession();
-  allData = [];
+  wipeSession(); allData = [];
   document.getElementById('admin-login').style.display = 'block';
   document.getElementById('admin-dashboard').style.display = 'none';
   document.getElementById('admin-pass').value = '';
-  document.getElementById('admin-badge').style.display = 'none';
   document.getElementById('session-info').textContent = '';
 }
 
-// ── SESSION & MIDNIGHT WATCHER ────────────────────────────
 setInterval(() => {
   checkMidnight();
   if (sessionToken && sessionExpiry) {
-    if (Date.now() > sessionExpiry) {
-      showToast('Session expired. Please login again.', true);
-      adminLogout();
-    } else {
-      updateSessionInfo();
-    }
+    if (Date.now() > sessionExpiry) { showToast('Session expired. Please login again.', true); adminLogout(); }
+    else updateSessionInfo();
   }
-}, 60000); // runs every minute
+}, 60000);
 
-// ── RESTORE SESSION ON PAGE LOAD ─────────────────────────
 window.onload = () => {
   const stored = getStoredSession();
   if (stored) {
-    sessionToken = stored.token;
-    sessionExpiry = stored.expiry;
-    // Auto-restore admin dashboard
+    sessionToken = stored.token; sessionExpiry = stored.expiry;
     document.getElementById('admin-login').style.display = 'none';
     document.getElementById('admin-dashboard').style.display = 'block';
-    document.getElementById('admin-badge').style.display = 'inline-block';
-    updateSessionInfo();
-    loadData();
-    // Switch to admin tab
-    switchTab('admin');
+    updateSessionInfo(); loadData();
   }
 };
 
-// ── LOAD DATA ─────────────────────────────────────────────
 async function loadData() {
   if (!sessionToken) return;
   document.getElementById('table-loading').style.display = 'block';
@@ -442,12 +325,19 @@ async function loadData() {
   document.getElementById('table-loading').style.display = 'none';
 }
 
-// ── RENDER TABLE ──────────────────────────────────────────
 function renderTable() {
+  const searchVal = (document.getElementById('search-box')?.value || '').toLowerCase().trim();
   let data = [...allData];
   if (activeFilter) data = data.filter(s => s['Event'] === activeFilter);
+  if (searchVal) data = data.filter(s =>
+    (s['Name']||'').toLowerCase().includes(searchVal) ||
+    (s['Scholar Number']||'').toString().includes(searchVal) ||
+    (s['Class']||'').toLowerCase().includes(searchVal) ||
+    (s['Event']||'').toLowerCase().includes(searchVal)
+  );
   const sort = document.getElementById('sort-by').value;
   if (sort === 'time') data.reverse();
+  else if (sort === 'Scholar Number') data.sort((a,b) => parseInt(a[sort]||0) - parseInt(b[sort]||0));
   else data.sort((a,b) => (a[sort]||'').toString().localeCompare((b[sort]||'').toString()));
 
   const allEvents = [...new Set(allData.map(s => s['Event']).filter(Boolean))];
@@ -456,33 +346,93 @@ function renderTable() {
   document.getElementById('stat-events').textContent = allEvents.length;
   document.getElementById('stat-classes').textContent = allClasses.length;
 
+  // Event counts
+  const ecWrap = document.getElementById('event-counts-wrap');
+  const ecEl = document.getElementById('event-counts');
+  if (allEvents.length) {
+    ecWrap.style.display = 'block';
+    ecEl.innerHTML = '';
+    allEvents.sort().forEach(e => {
+      const count = allData.filter(s => s['Event'] === e).length;
+      ecEl.innerHTML += `<div class="event-count-card"><span class="event-count-name">${e}</span><span class="event-count-num">${count}</span></div>`;
+    });
+  } else { ecWrap.style.display = 'none'; }
+
+  // Filter chips
   const fb = document.getElementById('filter-bar');
-  fb.innerHTML = `<button class="chip${!activeFilter?' active':''}" onclick="setFilter(null)">All Events</button>`;
+  fb.innerHTML = `<button class="chip${!activeFilter?' active':''}" onclick="setFilter(null)">All</button>`;
   allEvents.forEach(e => {
     fb.innerHTML += `<button class="chip${activeFilter===e?' active':''}" onclick="setFilter('${e}')">${e}</button>`;
+  });
+
+  // Export menu
+  const em = document.getElementById('export-menu');
+  em.innerHTML = `<button class="btn btn-secondary" style="font-size:10px;padding:7px 14px;" onclick="exportCSV()">All CSV</button>`;
+  allEvents.forEach(e => {
+    em.innerHTML += `<button class="btn btn-secondary" style="font-size:10px;padding:7px 14px;" onclick="exportEventCSV('${e.replace(/'/g,"\'")}')">📄 ${e}</button>`;
   });
 
   const tbody = document.getElementById('table-body');
   tbody.innerHTML = '';
   document.getElementById('empty-state').style.display = data.length ? 'none' : 'block';
+  document.getElementById('select-all').checked = false;
+  updateSelectionUI();
   data.forEach((s, i) => {
-    tbody.innerHTML += `<tr>
+    tbody.innerHTML += `<tr id="row-${s['ID']}">
+      <td class="cb-wrap"><input type="checkbox" class="row-cb" value="${s['ID']}" onchange="updateSelectionUI()"></td>
       <td style="color:var(--muted)">${i+1}</td>
-      <td><strong>${s['Name']||''}</strong></td>
+      <td id="name-${s['ID']}">${s['Name']||''}</td>
       <td style="font-family:'Orbitron',monospace;font-size:11px;color:var(--accent)">${s['Scholar Number']||''}</td>
-      <td>${s['Class']||''}</td>
-      <td><span class="badge">${s['Event']||''}</span></td>
+      <td id="cls-${s['ID']}">${s['Class']||''}</td>
+      <td id="evt-${s['ID']}"><span class="badge">${s['Event']||''}</span></td>
       <td style="color:var(--muted);font-size:11px">${s['Registered At']||''}</td>
-      <td><button class="btn btn-danger" onclick="deleteEntry('${s['ID']}')">Remove</button></td>
+      <td style="display:flex;gap:6px;flex-wrap:wrap;">
+        <button class="btn-edit" onclick="startEdit('${s['ID']}')">Edit</button>
+        <button class="btn btn-danger" onclick="deleteEntry('${s['ID']}')">✕</button>
+      </td>
     </tr>`;
   });
 }
 
+function toggleSelectAll(cb) {
+  document.querySelectorAll('.row-cb').forEach(c => {
+    c.checked = cb.checked;
+    document.getElementById('row-' + c.value).classList.toggle('selected', cb.checked);
+  });
+  updateSelectionUI();
+}
+
+function updateSelectionUI() {
+  const selected = document.querySelectorAll('.row-cb:checked');
+  const btn = document.getElementById('btn-delete-sel');
+  const countEl = document.getElementById('sel-count');
+  countEl.textContent = selected.length;
+  btn.classList.toggle('visible', selected.length > 0);
+  document.querySelectorAll('.row-cb').forEach(c => {
+    document.getElementById('row-' + c.value).classList.toggle('selected', c.checked);
+  });
+}
+
+async function deleteSelected() {
+  const selected = [...document.querySelectorAll('.row-cb:checked')].map(c => c.value);
+  if (!selected.length) return;
+  if (!confirm(`Remove ${selected.length} selected entr${selected.length>1?'ies':'y'} from Google Sheets?`)) return;
+  showToast(`Deleting ${selected.length} entries...`);
+  let failed = 0;
+  for (const id of selected) {
+    try {
+      const res = await api({ action: 'delete', id, token: sessionToken });
+      if (!res.success) failed++;
+    } catch(e) { failed++; }
+  }
+  if (failed > 0) showToast(`${failed} deletions failed.`, true);
+  else showToast(`✓ ${selected.length} entr${selected.length>1?'ies':'y'} removed.`);
+  loadData();
+}
+
 function setFilter(f) { activeFilter = f; renderTable(); }
 
-// ── DELETE ────────────────────────────────────────────────
 async function deleteEntry(id) {
-  if (!confirm('Remove this entry from Google Sheets?')) return;
   try {
     const res = await api({ action: 'delete', id, token: sessionToken });
     if (res.success) { showToast('Entry removed.'); loadData(); }
@@ -490,7 +440,6 @@ async function deleteEntry(id) {
   } catch(e) { showToast('Connection error', true); }
 }
 
-// ── ADD MANUALLY ──────────────────────────────────────────
 function openAddModal() { document.getElementById('add-modal').classList.add('open'); }
 function closeAddModal() { document.getElementById('add-modal').classList.remove('open'); }
 
@@ -500,7 +449,6 @@ async function addManually() {
   const cls = document.getElementById('m-class').value;
   const event = document.getElementById('m-event').value;
   if (!name || !scholar || !cls || !event) return showToast('Fill all fields!', true);
-
   const btn = document.getElementById('modal-add-btn');
   btn.disabled = true; btn.textContent = 'Adding...';
   try {
@@ -515,19 +463,62 @@ async function addManually() {
   btn.disabled = false; btn.textContent = 'Add Entry';
 }
 
-// ── EXPORT CSV ────────────────────────────────────────────
-function exportCSV() {
-  if (!allData.length) return showToast('No data to export!', true);
+function showExportMenu() {
+  const em = document.getElementById('export-menu');
+  em.style.display = em.style.display === 'none' ? 'flex' : 'none';
+}
+
+function exportCSV(dataOverride, filename) {
+  const data = dataOverride || allData;
+  if (!data.length) return showToast('No data to export!', true);
   const headers = ['Name','Scholar Number','Class','Event','Registered At'];
-  const rows = allData.map(s => headers.map(h => `"${s[h]||''}"`).join(','));
+  const rows = data.map(s => headers.map(h => `"${s[h]||''}"`).join(','));
   const csv = [headers.join(','), ...rows].join('\n');
   const a = document.createElement('a');
   a.href = URL.createObjectURL(new Blob([csv], {type:'text/csv'}));
-  a.download = 'TechQuest_Registrations.csv';
+  a.download = filename || 'TechQuest_Registrations.csv';
   a.click(); showToast('✓ CSV exported!');
 }
 
-// ── TOAST ─────────────────────────────────────────────────
+function exportEventCSV(eventName) {
+  const data = allData.filter(s => s['Event'] === eventName);
+  if (!data.length) return showToast(`No entries for ${eventName}`, true);
+  exportCSV(data, `TechQuest_${eventName.replace(/[^a-z0-9]/gi,'_')}.csv`);
+}
+
+function startEdit(id) {
+  const entry = allData.find(s => s['ID'].toString() === id.toString());
+  if (!entry) return;
+  const nameEl = document.getElementById('name-' + id);
+  const clsEl = document.getElementById('cls-' + id);
+  const evtEl = document.getElementById('evt-' + id);
+
+  nameEl.innerHTML = `<input class="edit-input" id="edit-name-${id}" value="${entry['Name']||''}">`;
+  clsEl.innerHTML = `<input class="edit-input" id="edit-cls-${id}" value="${entry['Class']||''}">`;
+  evtEl.innerHTML = `<input class="edit-input" id="edit-evt-${id}" value="${entry['Event']||''}">`;
+
+  // Replace edit button with save
+  const row = document.getElementById('row-' + id);
+  const actionTd = row.querySelector('td:last-child');
+  actionTd.innerHTML = `<button class="btn-save" onclick="saveEdit('${id}')">Save</button>`;
+}
+
+async function saveEdit(id) {
+  const name = document.getElementById('edit-name-' + id)?.value.trim();
+  const cls = document.getElementById('edit-cls-' + id)?.value.trim();
+  const evt = document.getElementById('edit-evt-' + id)?.value.trim();
+  if (!name || !cls || !evt) return showToast('Fields cannot be empty!', true);
+  try {
+    // Delete old entry and add new one with same ID feel
+    const entry = allData.find(s => s['ID'].toString() === id.toString());
+    const res1 = await api({ action: 'delete', id, token: sessionToken });
+    if (!res1.success) return showToast('Edit failed', true);
+    const res2 = await api({ action: 'add', name, scholar: entry['Scholar Number'], cls, event: evt, token: sessionToken });
+    if (res2.success) { showToast('✓ Entry updated!'); loadData(); }
+    else showToast('Edit failed: ' + (res2.error||''), true);
+  } catch(e) { showToast('Connection error', true); }
+}
+
 function showToast(msg, isErr=false) {
   const t = document.getElementById('toast');
   t.textContent = msg;
@@ -539,4 +530,3 @@ function showToast(msg, isErr=false) {
 </script>
 </body>
 </html>
-
