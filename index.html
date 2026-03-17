@@ -3,529 +3,722 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tech Quest — Admin</title>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<title>TechQuest 2026 – Student Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg:#050a0f;--surface:#0d1820;--surface2:#132030;
-    --accent:#00e5ff;--accent2:#ff6b35;--green:#00ff9d;
-    --text:#c8dde8;--muted:#4a6275;--border:rgba(0,229,255,0.15);
-    --glow:0 0 20px rgba(0,229,255,0.3);
+    --bg: #050a0f;
+    --surface: #0d1820;
+    --surface2: #132030;
+    --accent: #00e5ff;
+    --accent2: #ff6b35;
+    --green: #00ff9d;
+    --red: #e05c6b;
+    --text: #c8dde8;
+    --muted: #4a6275;
+    --border: rgba(0,229,255,0.15);
+    --border-hover: rgba(0,229,255,0.5);
   }
-  *{box-sizing:border-box;margin:0;padding:0;}
-  body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
-  body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 60% 40% at 20% 20%,rgba(0,229,255,0.05) 0%,transparent 60%),radial-gradient(ellipse 50% 50% at 80% 80%,rgba(255,107,53,0.04) 0%,transparent 60%);pointer-events:none;z-index:0;}
-  .grid-bg{position:fixed;inset:0;background-image:linear-gradient(rgba(0,229,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
-  .container{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:0 20px;}
-  header{padding:40px 0 30px;text-align:center;}
-  .logo-tag{font-family:'Orbitron',monospace;font-size:11px;letter-spacing:4px;color:var(--accent);text-transform:uppercase;opacity:.7;margin-bottom:12px;}
-  h1{font-family:'Orbitron',monospace;font-size:clamp(2rem,5vw,3.5rem);font-weight:900;background:linear-gradient(135deg,#fff 0%,var(--accent) 50%,var(--accent2) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;}
-  .subtitle{font-size:13px;color:var(--muted);margin-top:10px;letter-spacing:2px;text-transform:uppercase;}
-  .panel{padding:40px 0 60px;animation:fadeIn .3s ease;}
-  @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-  .card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:36px;position:relative;overflow:hidden;}
-  .card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--accent),transparent);}
-  .card-title{font-family:'Orbitron',monospace;font-size:14px;letter-spacing:2px;color:var(--accent);text-transform:uppercase;margin-bottom:28px;display:flex;align-items:center;gap:10px;}
-  .card-title::before{content:'';width:3px;height:16px;background:var(--accent);border-radius:2px;box-shadow:var(--glow);}
-  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
-  @media(max-width:600px){.form-grid{grid-template-columns:1fr}}
-  .form-group{display:flex;flex-direction:column;gap:8px;}
-  label{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);font-weight:500;}
-  input,select{background:var(--surface2);border:1px solid rgba(0,229,255,0.1);border-radius:8px;padding:12px 16px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;transition:all .2s;outline:none;width:100%;}
-  input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,229,255,0.1);}
-  select option{background:var(--surface2);}
-  .btn{padding:14px 28px;border:none;border-radius:8px;cursor:pointer;font-family:'Orbitron',monospace;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;transition:all .2s;}
-  .btn-primary{background:var(--accent);color:#000;box-shadow:var(--glow);}
-  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 0 30px rgba(0,229,255,.5);}
-  .btn-primary:disabled{opacity:.5;cursor:not-allowed;transform:none;}
-  .btn-danger{background:transparent;color:#ff4757;border:1px solid rgba(255,71,87,.4);padding:6px 14px;font-size:10px;}
-  .btn-danger:hover{background:rgba(255,71,87,.1);}
-  .btn-secondary{background:transparent;color:var(--accent);border:1px solid var(--border);font-size:11px;padding:10px 20px;}
-  .btn-secondary:hover{background:rgba(0,229,255,.05);}
-  .btn-green{background:var(--green);color:#000;box-shadow:0 0 20px rgba(0,255,157,.3);font-size:11px;padding:10px 20px;}
-  .submit-row{margin-top:28px;display:flex;justify-content:flex-end;}
-  .toast{position:fixed;bottom:30px;right:30px;background:var(--surface);border:1px solid var(--green);border-radius:10px;padding:14px 20px;font-size:13px;color:var(--green);box-shadow:0 0 20px rgba(0,255,157,.2);transform:translateY(80px);opacity:0;transition:all .3s;z-index:100;}
-  .toast.show{transform:translateY(0);opacity:1;}
-  .login-box{max-width:400px;margin:0 auto;}
-  .admin-toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:24px;}
-  .sort-select{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:9px 14px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;flex:1;min-width:140px;}
-  .table-wrap{overflow-x:auto;}
-  table{width:100%;border-collapse:collapse;font-size:13px;}
-  thead th{font-family:'Orbitron',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);}
-  tbody tr{border-bottom:1px solid rgba(255,255,255,.04);transition:background .15s;}
-  tbody tr:hover{background:rgba(0,229,255,.03);}
-  tbody td{padding:12px 16px;color:var(--text);}
-  .badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:500;background:rgba(0,229,255,.1);color:var(--accent);border:1px solid rgba(0,229,255,.2);}
-  .stats-row{display:flex;gap:16px;margin-bottom:24px;flex-wrap:wrap;}
-  .stat{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 20px;flex:1;min-width:120px;}
-  .stat-num{font-family:'Orbitron',monospace;font-size:28px;font-weight:900;color:var(--accent);}
-  .stat-label{font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-top:4px;}
-  .empty-state{text-align:center;padding:60px 20px;color:var(--muted);font-size:14px;}
-  .loading{text-align:center;padding:40px;color:var(--muted);}
-  .spinner{display:inline-block;width:24px;height:24px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;margin-right:10px;vertical-align:middle;}
-  @keyframes spin{to{transform:rotate(360deg)}}
-  .modal-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:50;align-items:center;justify-content:center;}
-  .modal-backdrop.open{display:flex;}
-  .modal{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:32px;width:90%;max-width:480px;position:relative;}
-  .modal h3{font-family:'Orbitron',monospace;font-size:14px;letter-spacing:2px;color:var(--accent);margin-bottom:24px;}
-  .close-modal{position:absolute;top:16px;right:16px;background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;line-height:1;}
-  .sr-row{display:flex;gap:10px;margin-top:24px;justify-content:flex-end;}
-  .filter-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
-  .chip{padding:5px 14px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:12px;cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif;}
-  .chip.active{background:rgba(0,229,255,.1);color:var(--accent);border-color:var(--accent);}
-  .session-info{font-size:11px;color:var(--muted);margin-left:auto;}
-  .cb-wrap{display:flex;align-items:center;justify-content:center;}
-  input[type="checkbox"]{width:16px;height:16px;accent-color:var(--accent);cursor:pointer;}
-  .btn-delete-sel{background:transparent;color:#ff4757;border:1px solid rgba(255,71,87,.4);font-size:11px;padding:10px 20px;border-radius:8px;cursor:pointer;font-family:'Orbitron',monospace;font-weight:700;letter-spacing:2px;text-transform:uppercase;transition:all .2s;display:none;}
-  .btn-delete-sel:hover{background:rgba(255,71,87,.1);}
-  .btn-delete-sel.visible{display:block;}
-  tbody tr.selected{background:rgba(255,71,87,0.05)!important;}
-  .search-wrap{position:relative;flex:2;min-width:180px;}
-  .search-wrap input{padding-left:36px;}
-  .search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;pointer-events:none;}
-  .event-counts{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-bottom:24px;}
-  .event-count-card{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;}
-  .event-count-name{font-size:12px;color:var(--text);}
-  .event-count-num{font-family:'Orbitron',monospace;font-size:16px;font-weight:700;color:var(--accent);}
-  .event-counts-title{font-family:'Orbitron',monospace;font-size:11px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:12px;}
-  .edit-input{background:var(--surface2);border:1px solid var(--accent);border-radius:6px;padding:4px 8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;width:100%;outline:none;}
-  .btn-save{background:var(--green);color:#000;border:none;border-radius:6px;padding:5px 10px;font-size:10px;font-family:'Orbitron',monospace;font-weight:700;cursor:pointer;letter-spacing:1px;}
-  .btn-edit{background:transparent;color:var(--accent);border:1px solid rgba(0,229,255,0.3);padding:5px 10px;font-size:10px;border-radius:6px;cursor:pointer;font-family:'Orbitron',monospace;font-weight:700;letter-spacing:1px;}
-  @media(max-width:600px){.event-counts{grid-template-columns:1fr 1fr;}}
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* SCANLINE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* ── LOGIN ── */
+  #loginScreen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: radial-gradient(ellipse at 50% 0%, rgba(0,229,255,0.07) 0%, transparent 60%);
+  }
+  .login-card {
+    width: 100%;
+    max-width: 420px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 44px 40px;
+    box-shadow: 0 0 60px rgba(0,229,255,0.12), 0 0 120px rgba(0,229,255,0.04);
+    animation: fadeUp 0.5s ease;
+  }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+
+  .login-logo {
+    text-align: center;
+    margin-bottom: 36px;
+  }
+  .login-logo .logo-text {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 26px;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--accent), #0099bb);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 4px;
+  }
+  .login-logo .logo-sub {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-top: 6px;
+  }
+  .login-logo .logo-year {
+    display: inline-block;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 11px;
+    color: var(--accent2);
+    border: 1px solid var(--accent2);
+    border-radius: 4px;
+    padding: 2px 8px;
+    margin-top: 8px;
+    letter-spacing: 2px;
+  }
+
+  .form-group { margin-bottom: 18px; }
+  .form-group label { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted); margin-bottom: 8px; }
+  .form-group input {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid rgba(0,229,255,0.1);
+    border-radius: 8px;
+    padding: 13px 16px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: border 0.2s, box-shadow 0.2s;
+  }
+  .form-group input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(0,229,255,0.1);
+  }
+  .form-group input::placeholder { color: var(--muted); }
+  input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0.5) sepia(1) hue-rotate(170deg); }
+
+  .btn-login {
+    width: 100%;
+    background: var(--accent);
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    padding: 14px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 8px;
+  }
+  .btn-login:hover { background: #33ecff; box-shadow: 0 0 20px rgba(0,229,255,0.4); transform: translateY(-1px); }
+  .btn-login:active { transform: translateY(0); }
+  .btn-login:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+  .error-msg { color: var(--red); font-size: 13px; margin-top: 12px; text-align: center; display: none; }
+
+  /* ── HEADER ── */
+  #header {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 60px;
+    background: rgba(5,10,15,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    z-index: 100;
+    padding: 0 28px;
+    align-items: center;
+    justify-content: space-between;
+  }
+  #header.visible { display: flex; }
+  .header-logo {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 3px;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .header-right { display: flex; align-items: center; gap: 16px; }
+  .student-badge {
+    font-size: 12px;
+    color: var(--muted);
+    display: none;
+  }
+  .student-badge span { color: var(--text); font-weight: 600; }
+  .btn-logout {
+    background: transparent;
+    color: var(--red);
+    border: 1px solid rgba(224,92,107,0.4);
+    border-radius: 6px;
+    padding: 7px 14px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-logout:hover { background: rgba(224,92,107,0.1); border-color: var(--red); }
+
+  /* ── DASHBOARD ── */
+  #dashboard {
+    display: none;
+    padding-top: 80px;
+    padding-bottom: 60px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+  #dashboard.visible { display: block; }
+
+  /* HERO */
+  .hero {
+    text-align: center;
+    padding: 48px 20px 40px;
+    position: relative;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 200px; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  }
+  .hero-greeting {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(28px, 5vw, 48px);
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--accent) 0%, #ffffff 60%, var(--accent2) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 2px;
+    line-height: 1.2;
+    margin-bottom: 16px;
+  }
+  .hero-info { display: flex; gap: 24px; justify-content: center; flex-wrap: wrap; margin-top: 16px; }
+  .info-chip {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .info-chip span { color: var(--accent); font-weight: 600; }
+
+  /* SECTION HEADINGS */
+  .section-heading {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--muted);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin: 40px 0 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .section-heading::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--border), transparent);
+  }
+
+  /* EVENTS GRID */
+  .events-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 14px;
+  }
+  .event-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    cursor: default;
+    transition: all 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+  .event-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+  .event-card:hover { border-color: var(--border-hover); background: #0f1e2a; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+  .event-card:hover::before { opacity: 1; }
+
+  .event-name {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    line-height: 1.4;
+  }
+  .btn-apply {
+    width: 100%;
+    background: var(--green);
+    color: #000;
+    border: none;
+    border-radius: 6px;
+    padding: 9px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-apply:hover:not(:disabled) { box-shadow: 0 0 16px rgba(0,255,157,0.4); transform: translateY(-1px); }
+  .btn-apply:disabled {
+    background: var(--surface2);
+    color: var(--muted);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+  .event-status {
+    font-size: 11px;
+    margin-top: 10px;
+    color: var(--muted);
+    text-align: center;
+  }
+  .event-status.applied { color: var(--green); font-weight: 600; }
+
+  /* RESULTS GRID */
+  .results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 14px;
+  }
+  .result-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    transition: all 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+  .result-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent2), transparent);
+  }
+  .result-card:hover { border-color: rgba(255,107,53,0.3); transform: translateY(-2px); }
+  .result-event-name {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 14px;
+  }
+  .result-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+  .result-label { font-size: 12px; color: var(--muted); }
+  .badge {
+    background: var(--green);
+    color: #000;
+    padding: 3px 10px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+  .badge.pending {
+    background: var(--surface2);
+    color: var(--muted);
+    border: 1px solid var(--border);
+  }
+  .badge.rank { background: var(--accent2); }
+  .badge.no-rank { background: var(--surface2); color: var(--muted); border: 1px solid var(--border); }
+
+  /* EMPTY STATE */
+  .empty-state {
+    grid-column: 1/-1;
+    text-align: center;
+    padding: 48px 20px;
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .empty-state .empty-icon { font-size: 36px; display: block; margin-bottom: 12px; }
+
+  /* LOADING */
+  .loading-wrap {
+    grid-column: 1/-1;
+    display: flex;
+    justify-content: center;
+    padding: 40px;
+  }
+  .spinner {
+    width: 32px; height: 32px;
+    border: 2px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* TOAST */
+  #toastContainer {
+    position: fixed;
+    bottom: 24px; right: 24px;
+    z-index: 9998;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .toast {
+    background: var(--surface);
+    border-radius: 8px;
+    padding: 12px 18px;
+    font-size: 13px;
+    min-width: 220px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    animation: slideUp 0.3s ease forwards;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .toast.success { border: 1px solid rgba(0,255,157,0.4); color: var(--green); }
+  .toast.error { border: 1px solid rgba(224,92,107,0.4); color: var(--red); }
+  @keyframes slideUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes slideDown { from { opacity:1; transform:translateY(0); } to { opacity:0; transform:translateY(20px); } }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .login-card { padding: 32px 24px; }
+    #header { padding: 0 16px; }
+    .student-badge { display: none !important; }
+    #dashboard { padding-left: 16px; padding-right: 16px; }
+    .events-grid, .results-grid { grid-template-columns: 1fr; }
+  }
 </style>
 </head>
 <body>
-<div class="grid-bg"></div>
-<div class="container">
-  <header>
-    <div class="logo-tag">&#9670; Dr. Virendra Swarup Education Center &#9670;</div>
-    <h1>TECH QUEST</h1>
-    <div class="subtitle">Admin Panel</div>
-  </header>
 
-  <div class="panel">
-    <!-- LOGIN -->
-    <div id="admin-login" class="login-box">
-      <div class="card">
-        <div class="card-title">Admin Access</div>
-        <div class="form-group">
-          <label>Password</label>
-          <input type="password" id="admin-pass" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')adminLogin()">
-        </div>
-        <p id="login-error" style="color:#ff4757;font-size:12px;margin-top:12px;display:none;"></p>
-        <div class="submit-row">
-          <button class="btn btn-primary" id="login-btn" onclick="adminLogin()">Login &#8594;</button>
-        </div>
-        <p style="font-size:11px;color:var(--muted);margin-top:16px;text-align:center;">Password verified securely via Google Sheets &#128274;</p>
-      </div>
+<!-- LOGIN SCREEN -->
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="logo-text">TECHQUEST</div>
+      <div class="logo-sub">Student Portal</div>
+      <div class="logo-year">2026</div>
     </div>
-
-    <!-- DASHBOARD -->
-    <div id="admin-dashboard" style="display:none;">
-      <div class="stats-row">
-        <div class="stat"><div class="stat-num" id="stat-total">—</div><div class="stat-label">Total Entries</div></div>
-        <div class="stat"><div class="stat-num" id="stat-events">—</div><div class="stat-label">Events</div></div>
-        <div class="stat"><div class="stat-num" id="stat-classes">—</div><div class="stat-label">Classes</div></div>
-      </div>
-      <div class="card">
-        <div class="card-title">All Registrations <span class="session-info" id="session-info"></span></div>
-        <div class="admin-toolbar">
-          <div class="search-wrap">
-            <span class="search-icon">🔍</span>
-            <input type="text" id="search-box" placeholder="Search name, scholar, class..." oninput="renderTable()" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:9px 14px 9px 36px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;width:100%;">
-          </div>
-          <select class="sort-select" id="sort-by" onchange="renderTable()" style="flex:none;width:auto;">
-            <option value="time">Latest First</option>
-            <option value="Name">Name (A–Z)</option>
-            <option value="Class">Class</option>
-            <option value="Event">Event</option>
-            <option value="Scholar Number">Scholar No.</option>
-          </select>
-          <button class="btn btn-secondary" onclick="openAddModal()">+ Add</button>
-          <button class="btn-delete-sel" id="btn-delete-sel" onclick="deleteSelected()">🗑 (<span id="sel-count">0</span>)</button>
-          <button class="btn btn-secondary" onclick="loadData()">&#8635;</button>
-          <button class="btn btn-green" onclick="showExportMenu()">Export ▾</button>
-          <button class="btn btn-secondary" onclick="adminLogout()">Logout</button>
-        </div>
-        <div id="export-menu" style="display:none;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:10px;margin-bottom:16px;display:none;flex-wrap:wrap;gap:8px;" id="export-menu"></div>
-        <div id="event-counts-wrap" style="margin-bottom:20px;display:none;">
-          <div class="event-counts-title">Registrations per Event</div>
-          <div class="event-counts" id="event-counts"></div>
-        </div>
-        <div class="filter-bar" id="filter-bar"></div>
-        <div id="table-loading" class="loading" style="display:none;"><span class="spinner"></span>Loading from Google Sheets...</div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th><input type="checkbox" id="select-all" onchange="toggleSelectAll(this)"></th><th>#</th><th>Name</th><th>Scholar No.</th><th>Class</th><th>Event</th><th>Registered</th><th>Action</th></tr></thead>
-            <tbody id="table-body"></tbody>
-          </table>
-          <div id="empty-state" class="empty-state" style="display:none;">No registrations yet.</div>
-        </div>
-      </div>
+    <div class="form-group">
+      <label for="scholarInput">Scholar Number</label>
+      <input type="text" id="scholarInput" placeholder="e.g. 10001" autocomplete="off">
     </div>
+    <div class="form-group">
+      <label for="dobInput">Date of Birth</label>
+      <input type="date" id="dobInput">
+    </div>
+    <button class="btn-login" id="loginBtn" onclick="handleLogin()">LOGIN</button>
+    <div class="error-msg" id="loginError">Scholar Number or DOB incorrect</div>
   </div>
 </div>
 
-<!-- ADD MODAL -->
-<div class="modal-backdrop" id="add-modal">
-  <div class="modal">
-    <button class="close-modal" onclick="closeAddModal()">&#10005;</button>
-    <h3>Add Entry Manually</h3>
-    <div class="form-grid">
-      <div class="form-group"><label>Full Name</label><input type="text" id="m-name" placeholder="Full name"></div>
-      <div class="form-group"><label>Scholar Number</label><input type="text" id="m-scholar" placeholder="Scholar no."></div>
-      <div class="form-group">
-        <label>Class</label>
-        <select id="m-class">
-          <option value="">— Select —</option>
-          <option>Class 5A</option><option>Class 5B</option><option>Class 5C</option><option>Class 5D</option><option>Class 5E</option>
-          <option>Class 6A</option><option>Class 6B</option><option>Class 6C</option><option>Class 6D</option><option>Class 6E</option>
-          <option>Class 7A</option><option>Class 7B</option><option>Class 7C</option><option>Class 7D</option><option>Class 7E</option>
-          <option>Class 8A</option><option>Class 8B</option><option>Class 8C</option><option>Class 8D</option><option>Class 8E</option>
-          <option>Class 9A</option><option>Class 9B</option><option>Class 9C</option><option>Class 9D</option>
-          <option>Class 10A</option><option>Class 10B</option><option>Class 10C</option><option>Class 10D</option>
-          <option>Class 11A</option><option>Class 11B</option><option>Class 11C</option><option>Class 11D</option>
-          <option>Class 12A</option><option>Class 12B</option><option>Class 12C</option><option>Class 12D</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Event</label>
-        <select id="m-event">
-          <option value="">— Select —</option>
-          <option>Codezilla</option><option>Kill D' Bug</option><option>Algorithm Making</option><option>Robotics</option>
-          <option>Pivot Animation</option><option>Slide Master</option><option>PixBit</option><option>Debate</option>
-          <option>Ham the Jam</option><option>From the Scratch</option><option>Digital Playground</option><option>Animatrix</option>
-          <option>Weave the Web</option><option>Pixelated</option><option>Cinematic Cuts</option><option>Fade The Track</option>
-          <option>Frame D Flash</option><option>Tech Quiz</option><option>Do DubDUB</option><option>Scavenger Hunt</option>
-        </select>
-      </div>
+<!-- HEADER -->
+<header id="header">
+  <span class="header-logo" onclick="location.reload()">TECHQUEST</span>
+  <div class="header-right">
+    <div class="student-badge" id="studentBadge">Logged in as <span id="studentName">—</span></div>
+    <button class="btn-logout" onclick="handleLogout()">Logout</button>
+  </div>
+</header>
+
+<!-- DASHBOARD -->
+<div id="dashboard">
+  <div class="hero">
+    <div class="hero-greeting">Welcome Back</div>
+    <div class="hero-info">
+      <div class="info-chip">Scholar: <span id="heroScholar">—</span></div>
+      <div class="info-chip">Class: <span id="heroClass">—</span></div>
     </div>
-    <div class="sr-row">
-      <button class="btn btn-secondary" onclick="closeAddModal()">Cancel</button>
-      <button class="btn btn-primary" id="modal-add-btn" onclick="addManually()">Add Entry</button>
-    </div>
+  </div>
+
+  <div class="section-heading">&#9889; All Events — Apply Here</div>
+  <div class="events-grid" id="eventsGrid">
+    <div class="loading-wrap"><div class="spinner"></div></div>
+  </div>
+
+  <div class="section-heading">&#127942; Your Results</div>
+  <div class="results-grid" id="resultsGrid">
+    <div class="loading-wrap"><div class="spinner"></div></div>
   </div>
 </div>
 
-<div class="toast" id="toast"></div>
+<div id="toastContainer"></div>
 
 <script>
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby8QpcZVkLv4Vn0I7D1EsmZsXU_Lc2TZp82cMPYHhq_YRyqxpexueKVc7nT3degmT8NkA/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbw8CihzV_OlVe_VhFDlbQpsfYCpHxe4qX0Mv0UZl7e5HTPmlPWFfSepm0s5xqSXMWHhrA/exec';
+let currentStudent = null;
 
-let allData = [];
-let activeFilter = null;
-let sessionToken = null;
-let sessionExpiry = null;
-
-function getStoredSession() {
-  try {
-    const raw = localStorage.getItem('tq_session');
-    if (!raw) return null;
-    const data = JSON.parse(raw);
-    const today = new Date().toLocaleDateString('en-IN');
-    if (data.date !== today || Date.now() > data.expiry) { wipeSession(); return null; }
-    return data;
-  } catch(e) { wipeSession(); return null; }
-}
-
-function saveSession(token, expiry) {
-  const today = new Date().toLocaleDateString('en-IN');
-  localStorage.setItem('tq_session', JSON.stringify({ token, expiry, date: today }));
-}
-
-function wipeSession() {
-  localStorage.removeItem('tq_session');
-  sessionToken = null; sessionExpiry = null;
-}
-
-function checkMidnight() {
-  const now = new Date();
-  if (now.getHours() === 0 && now.getMinutes() === 0) {
-    if (sessionToken) { wipeSession(); adminLogout(); showToast('Midnight reset — please login again.', true); }
-  }
-}
-
-async function api(params) {
-  const res = await fetch(SCRIPT_URL + '?' + new URLSearchParams(params).toString());
-  return res.json();
-}
-
-async function adminLogin() {
-  const password = document.getElementById('admin-pass').value;
-  if (!password) return showToast('Enter a password!', true);
-  const btn = document.getElementById('login-btn');
-  const errEl = document.getElementById('login-error');
-  btn.disabled = true; btn.textContent = 'Verifying...';
-  errEl.style.display = 'none';
-  try {
-    const res = await api({ action: 'verify', password });
-    if (res.success && res.token) {
-      sessionToken = res.token;
-      sessionExpiry = Date.now() + 3600000;
-      saveSession(sessionToken, sessionExpiry);
-      document.getElementById('admin-login').style.display = 'none';
-      document.getElementById('admin-dashboard').style.display = 'block';
-      document.getElementById('admin-pass').value = '';
-      updateSessionInfo();
-      loadData();
-    } else {
-      errEl.textContent = '✗ ' + (res.error || 'Invalid password');
-      errEl.style.display = 'block';
-    }
-  } catch(e) {
-    errEl.textContent = '✗ Connection error. Check your Script URL.';
-    errEl.style.display = 'block';
-  }
-  btn.disabled = false; btn.textContent = 'Login →';
-}
-
-function updateSessionInfo() {
-  if (!sessionExpiry) return;
-  const mins = Math.round((sessionExpiry - Date.now()) / 60000);
-  document.getElementById('session-info').textContent = `Session expires in ${mins}m`;
-}
-
-function adminLogout() {
-  wipeSession(); allData = [];
-  document.getElementById('admin-login').style.display = 'block';
-  document.getElementById('admin-dashboard').style.display = 'none';
-  document.getElementById('admin-pass').value = '';
-  document.getElementById('session-info').textContent = '';
-}
-
-setInterval(() => {
-  checkMidnight();
-  if (sessionToken && sessionExpiry) {
-    if (Date.now() > sessionExpiry) { showToast('Session expired. Please login again.', true); adminLogout(); }
-    else updateSessionInfo();
-  }
-}, 60000);
-
-window.onload = () => {
-  const stored = getStoredSession();
+// ── SESSION CHECK ──
+window.addEventListener('load', () => {
+  const stored = sessionStorage.getItem('tq_student');
   if (stored) {
-    sessionToken = stored.token; sessionExpiry = stored.expiry;
-    document.getElementById('admin-login').style.display = 'none';
-    document.getElementById('admin-dashboard').style.display = 'block';
-    updateSessionInfo(); loadData();
-  }
-};
-
-async function loadData() {
-  if (!sessionToken) return;
-  document.getElementById('table-loading').style.display = 'block';
-  document.getElementById('table-body').innerHTML = '';
-  document.getElementById('empty-state').style.display = 'none';
-  try {
-    const res = await api({ action: 'read', token: sessionToken });
-    if (res.success) { allData = res.data; renderTable(); }
-    else if (res.error && res.error.includes('Session')) { showToast(res.error, true); adminLogout(); }
-    else showToast('Failed to load: ' + res.error, true);
-  } catch(e) { showToast('Connection error', true); }
-  document.getElementById('table-loading').style.display = 'none';
-}
-
-function renderTable() {
-  const searchVal = (document.getElementById('search-box')?.value || '').toLowerCase().trim();
-  let data = [...allData];
-  if (activeFilter) data = data.filter(s => s['Event'] === activeFilter);
-  if (searchVal) data = data.filter(s =>
-    (s['Name']||'').toLowerCase().includes(searchVal) ||
-    (s['Scholar Number']||'').toString().includes(searchVal) ||
-    (s['Class']||'').toLowerCase().includes(searchVal) ||
-    (s['Event']||'').toLowerCase().includes(searchVal)
-  );
-  const sort = document.getElementById('sort-by').value;
-  if (sort === 'time') data.reverse();
-  else if (sort === 'Scholar Number') data.sort((a,b) => parseInt(a[sort]||0) - parseInt(b[sort]||0));
-  else data.sort((a,b) => (a[sort]||'').toString().localeCompare((b[sort]||'').toString()));
-
-  const allEvents = [...new Set(allData.map(s => s['Event']).filter(Boolean))];
-  const allClasses = [...new Set(allData.map(s => s['Class']).filter(Boolean))];
-  document.getElementById('stat-total').textContent = allData.length;
-  document.getElementById('stat-events').textContent = allEvents.length;
-  document.getElementById('stat-classes').textContent = allClasses.length;
-
-  // Event counts
-  const ecWrap = document.getElementById('event-counts-wrap');
-  const ecEl = document.getElementById('event-counts');
-  if (allEvents.length) {
-    ecWrap.style.display = 'block';
-    ecEl.innerHTML = '';
-    allEvents.sort().forEach(e => {
-      const count = allData.filter(s => s['Event'] === e).length;
-      ecEl.innerHTML += `<div class="event-count-card"><span class="event-count-name">${e}</span><span class="event-count-num">${count}</span></div>`;
-    });
-  } else { ecWrap.style.display = 'none'; }
-
-  // Filter chips
-  const fb = document.getElementById('filter-bar');
-  fb.innerHTML = `<button class="chip${!activeFilter?' active':''}" onclick="setFilter(null)">All</button>`;
-  allEvents.forEach(e => {
-    fb.innerHTML += `<button class="chip${activeFilter===e?' active':''}" onclick="setFilter('${e}')">${e}</button>`;
-  });
-
-  // Export menu
-  const em = document.getElementById('export-menu');
-  em.innerHTML = `<button class="btn btn-secondary" style="font-size:10px;padding:7px 14px;" onclick="exportCSV()">All CSV</button>`;
-  allEvents.forEach(e => {
-    em.innerHTML += `<button class="btn btn-secondary" style="font-size:10px;padding:7px 14px;" onclick="exportEventCSV('${e.replace(/'/g,"\'")}')">📄 ${e}</button>`;
-  });
-
-  const tbody = document.getElementById('table-body');
-  tbody.innerHTML = '';
-  document.getElementById('empty-state').style.display = data.length ? 'none' : 'block';
-  document.getElementById('select-all').checked = false;
-  updateSelectionUI();
-  data.forEach((s, i) => {
-    tbody.innerHTML += `<tr id="row-${s['ID']}">
-      <td class="cb-wrap"><input type="checkbox" class="row-cb" value="${s['ID']}" onchange="updateSelectionUI()"></td>
-      <td style="color:var(--muted)">${i+1}</td>
-      <td id="name-${s['ID']}">${s['Name']||''}</td>
-      <td style="font-family:'Orbitron',monospace;font-size:11px;color:var(--accent)">${s['Scholar Number']||''}</td>
-      <td id="cls-${s['ID']}">${s['Class']||''}</td>
-      <td id="evt-${s['ID']}"><span class="badge">${s['Event']||''}</span></td>
-      <td style="color:var(--muted);font-size:11px">${s['Registered At']||''}</td>
-      <td style="display:flex;gap:6px;flex-wrap:wrap;">
-        <button class="btn-edit" onclick="startEdit('${s['ID']}')">Edit</button>
-        <button class="btn btn-danger" onclick="deleteEntry('${s['ID']}')">✕</button>
-      </td>
-    </tr>`;
-  });
-}
-
-function toggleSelectAll(cb) {
-  document.querySelectorAll('.row-cb').forEach(c => {
-    c.checked = cb.checked;
-    document.getElementById('row-' + c.value).classList.toggle('selected', cb.checked);
-  });
-  updateSelectionUI();
-}
-
-function updateSelectionUI() {
-  const selected = document.querySelectorAll('.row-cb:checked');
-  const btn = document.getElementById('btn-delete-sel');
-  const countEl = document.getElementById('sel-count');
-  countEl.textContent = selected.length;
-  btn.classList.toggle('visible', selected.length > 0);
-  document.querySelectorAll('.row-cb').forEach(c => {
-    document.getElementById('row-' + c.value).classList.toggle('selected', c.checked);
-  });
-}
-
-async function deleteSelected() {
-  const selected = [...document.querySelectorAll('.row-cb:checked')].map(c => c.value);
-  if (!selected.length) return;
-  if (!confirm(`Remove ${selected.length} selected entr${selected.length>1?'ies':'y'} from Google Sheets?`)) return;
-  showToast(`Deleting ${selected.length} entries...`);
-  let failed = 0;
-  for (const id of selected) {
     try {
-      const res = await api({ action: 'delete', id, token: sessionToken });
-      if (!res.success) failed++;
-    } catch(e) { failed++; }
+      currentStudent = JSON.parse(stored);
+      showDashboard();
+    } catch(e) { sessionStorage.removeItem('tq_student'); }
   }
-  if (failed > 0) showToast(`${failed} deletions failed.`, true);
-  else showToast(`✓ ${selected.length} entr${selected.length>1?'ies':'y'} removed.`);
-  loadData();
+});
+
+// ── DEVICE ID ──
+function getDeviceId() {
+  let id = localStorage.getItem('tq_device_id');
+  if (!id) {
+    id = 'dev_' + btoa(navigator.userAgent + screen.width + screen.height).replace(/[^a-zA-Z0-9]/g,'').substring(0, 24) + '_' + Date.now();
+    localStorage.setItem('tq_device_id', id);
+  }
+  return id;
 }
 
-function setFilter(f) { activeFilter = f; renderTable(); }
-
-async function deleteEntry(id) {
+// ── API WRAPPER ──
+async function fetchAPI(url, options = {}) {
   try {
-    const res = await api({ action: 'delete', id, token: sessionToken });
-    if (res.success) { showToast('Entry removed.'); loadData(); }
-    else showToast('Delete failed: ' + (res.error||''), true);
-  } catch(e) { showToast('Connection error', true); }
+    const res = await fetch(url, { ...options, mode: 'cors' });
+    const text = await res.text();
+    try { return JSON.parse(text); }
+    catch(e) { return {}; }
+  } catch(err) {
+    console.warn('fetchAPI error:', err);
+    return null;
+  }
 }
 
-function openAddModal() { document.getElementById('add-modal').classList.add('open'); }
-function closeAddModal() { document.getElementById('add-modal').classList.remove('open'); }
+// ── LOGIN ──
+async function handleLogin() {
+  const scholar = document.getElementById('scholarInput').value.trim();
+  const dob = document.getElementById('dobInput').value;
+  const btn = document.getElementById('loginBtn');
+  const err = document.getElementById('loginError');
+  err.style.display = 'none';
 
-async function addManually() {
-  const name = document.getElementById('m-name').value.trim();
-  const scholar = document.getElementById('m-scholar').value.trim();
-  const cls = document.getElementById('m-class').value;
-  const event = document.getElementById('m-event').value;
-  if (!name || !scholar || !cls || !event) return showToast('Fill all fields!', true);
-  const btn = document.getElementById('modal-add-btn');
-  btn.disabled = true; btn.textContent = 'Adding...';
-  try {
-    const res = await api({ action: 'add', name, scholar, cls, event, token: sessionToken });
-    if (res.success) {
-      closeAddModal();
-      ['m-name','m-scholar'].forEach(id => document.getElementById(id).value = '');
-      ['m-class','m-event'].forEach(id => document.getElementById(id).value = '');
-      showToast('✓ Entry added!'); loadData();
-    } else showToast('Error: ' + (res.error||''), true);
-  } catch(e) { showToast('Connection error', true); }
-  btn.disabled = false; btn.textContent = 'Add Entry';
+  if (!scholar || !dob) { showErr('Please fill in both fields'); return; }
+
+  btn.disabled = true;
+  btn.textContent = 'Logging in...';
+
+  const students = await fetchAPI(`${API_URL}?path=students`);
+  if (!Array.isArray(students)) {
+    btn.disabled = false;
+    btn.textContent = 'LOGIN';
+    showErr('Could not connect. Please try again.');
+    return;
+  }
+
+  const matched = students.find(s => {
+    const sMatch = String(s.scholarNo).trim() === String(scholar).trim();
+    const dobMatch = normalizeDob(s.dob) === dob;
+    return sMatch && dobMatch;
+  });
+
+  btn.disabled = false;
+  btn.textContent = 'LOGIN';
+
+  if (matched) {
+    currentStudent = matched;
+    sessionStorage.setItem('tq_student', JSON.stringify(matched));
+    showDashboard();
+  } else {
+    showErr('Scholar Number or DOB incorrect');
+  }
 }
 
-function showExportMenu() {
-  const em = document.getElementById('export-menu');
-  em.style.display = em.style.display === 'none' ? 'flex' : 'none';
+function normalizeDob(dob) {
+  if (!dob) return '';
+  if (dob.includes('T')) {
+    try {
+      const d = new Date(dob);
+      const ist = new Date(d.getTime() + 5.5 * 60 * 60 * 1000);
+      return ist.toISOString().split('T')[0];
+    } catch(e) { return dob.split('T')[0]; }
+  }
+  return String(dob).split('T')[0];
 }
 
-function exportCSV(dataOverride, filename) {
-  const data = dataOverride || allData;
-  if (!data.length) return showToast('No data to export!', true);
-  const headers = ['Name','Scholar Number','Class','Event','Registered At'];
-  const rows = data.map(s => headers.map(h => `"${s[h]||''}"`).join(','));
-  const csv = [headers.join(','), ...rows].join('\n');
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(new Blob([csv], {type:'text/csv'}));
-  a.download = filename || 'TechQuest_Registrations.csv';
-  a.click(); showToast('✓ CSV exported!');
+function showErr(msg) {
+  const el = document.getElementById('loginError');
+  el.textContent = msg;
+  el.style.display = 'block';
 }
 
-function exportEventCSV(eventName) {
-  const data = allData.filter(s => s['Event'] === eventName);
-  if (!data.length) return showToast(`No entries for ${eventName}`, true);
-  exportCSV(data, `TechQuest_${eventName.replace(/[^a-z0-9]/gi,'_')}.csv`);
+document.getElementById('dobInput').addEventListener('keydown', e => { if(e.key === 'Enter') handleLogin(); });
+document.getElementById('scholarInput').addEventListener('keydown', e => { if(e.key === 'Enter') handleLogin(); });
+
+// ── DASHBOARD ──
+function showDashboard() {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('header').classList.add('visible');
+  document.getElementById('dashboard').classList.add('visible');
+  document.getElementById('studentBadge').style.display = 'flex';
+  document.getElementById('studentName').textContent = currentStudent.name || currentStudent.scholarNo;
+  document.getElementById('heroScholar').textContent = currentStudent.scholarNo;
+  document.getElementById('heroClass').textContent = currentStudent.class || '—';
+  loadPage();
 }
 
-function startEdit(id) {
-  const entry = allData.find(s => s['ID'].toString() === id.toString());
-  if (!entry) return;
-  const nameEl = document.getElementById('name-' + id);
-  const clsEl = document.getElementById('cls-' + id);
-  const evtEl = document.getElementById('evt-' + id);
-
-  nameEl.innerHTML = `<input class="edit-input" id="edit-name-${id}" value="${entry['Name']||''}">`;
-  clsEl.innerHTML = `<input class="edit-input" id="edit-cls-${id}" value="${entry['Class']||''}">`;
-  evtEl.innerHTML = `<input class="edit-input" id="edit-evt-${id}" value="${entry['Event']||''}">`;
-
-  // Replace edit button with save
-  const row = document.getElementById('row-' + id);
-  const actionTd = row.querySelector('td:last-child');
-  actionTd.innerHTML = `<button class="btn-save" onclick="saveEdit('${id}')">Save</button>`;
+async function loadPage() {
+  await Promise.all([loadEvents(), loadResults()]);
 }
 
-async function saveEdit(id) {
-  const name = document.getElementById('edit-name-' + id)?.value.trim();
-  const cls = document.getElementById('edit-cls-' + id)?.value.trim();
-  const evt = document.getElementById('edit-evt-' + id)?.value.trim();
-  if (!name || !cls || !evt) return showToast('Fields cannot be empty!', true);
-  try {
-    // Delete old entry and add new one with same ID feel
-    const entry = allData.find(s => s['ID'].toString() === id.toString());
-    const res1 = await api({ action: 'delete', id, token: sessionToken });
-    if (!res1.success) return showToast('Edit failed', true);
-    const res2 = await api({ action: 'add', name, scholar: entry['Scholar Number'], cls, event: evt, token: sessionToken });
-    if (res2.success) { showToast('✓ Entry updated!'); loadData(); }
-    else showToast('Edit failed: ' + (res2.error||''), true);
-  } catch(e) { showToast('Connection error', true); }
+// ── EVENTS ──
+async function loadEvents() {
+  const grid = document.getElementById('eventsGrid');
+  grid.innerHTML = '<div class="loading-wrap"><div class="spinner"></div></div>';
+
+  const [events, regs] = await Promise.all([
+    fetchAPI(`${API_URL}?path=events`),
+    fetchAPI(`${API_URL}?path=student/registrations/${currentStudent.scholarNo}`)
+  ]);
+
+  if (!Array.isArray(events)) {
+    grid.innerHTML = '<div class="empty-state"><span class="empty-icon">⚡</span>Could not load events. Check connection.</div>';
+    return;
+  }
+
+  const appliedEvents = Array.isArray(regs) ? regs.map(r => r.event) : [];
+
+  grid.innerHTML = '';
+  events.forEach(eventName => {
+    const applied = appliedEvents.includes(eventName);
+    const card = document.createElement('div');
+    card.className = 'event-card';
+    card.innerHTML = `
+      <div class="event-name">${eventName}</div>
+      <button class="btn-apply" ${applied ? 'disabled' : ''} data-event="${eventName}" onclick="applyEvent(this, '${eventName.replace(/'/g,"\\'")}')">
+        ${applied ? 'Applied ✓' : 'Apply'}
+      </button>
+      <div class="event-status ${applied ? 'applied' : ''}">
+        ${applied ? '✓ Application submitted' : 'Click to apply'}
+      </div>
+    `;
+    grid.appendChild(card);
+  });
 }
 
-function showToast(msg, isErr=false) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.style.borderColor = isErr ? '#ff4757' : 'var(--green)';
-  t.style.color = isErr ? '#ff4757' : 'var(--green)';
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3000);
+async function applyEvent(btn, eventName) {
+  btn.disabled = true;
+  const originalText = btn.textContent;
+  btn.textContent = 'Applying...';
+
+  const result = await fetchAPI(`${API_URL}?path=registrations`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      name: currentStudent.name,
+      scholar: currentStudent.scholarNo,
+      cls: currentStudent.class,
+      event: eventName,
+      deviceId: getDeviceId()
+    })
+  });
+
+  if (result && result.success) {
+    const statusEl = btn.nextElementSibling;
+    btn.textContent = 'Applied ✓';
+    if (statusEl) { statusEl.textContent = '✓ Application submitted'; statusEl.className = 'event-status applied'; }
+    showToast('Applied for ' + eventName + ' successfully!', 'success');
+    setTimeout(() => loadPage(), 1500);
+  } else {
+    btn.disabled = false;
+    btn.textContent = originalText;
+    const msg = (result && result.error) ? result.error : 'Failed to apply. Try again.';
+    showToast(msg === 'RATE_LIMITED' ? 'Rate limit reached (5 apps/day)' : msg, 'error');
+  }
+}
+
+// ── RESULTS ──
+async function loadResults() {
+  const grid = document.getElementById('resultsGrid');
+  grid.innerHTML = '<div class="loading-wrap"><div class="spinner"></div></div>';
+
+  const regs = await fetchAPI(`${API_URL}?path=student/registrations/${currentStudent.scholarNo}`);
+
+  if (!Array.isArray(regs) || regs.length === 0) {
+    grid.innerHTML = '<div class="empty-state"><span class="empty-icon">🎯</span>Apply for events to see your results here.</div>';
+    return;
+  }
+
+  grid.innerHTML = '';
+  regs.forEach(reg => {
+    const card = document.createElement('div');
+    card.className = 'result-card';
+    const hasMarks = parseFloat(reg.marks) > 0;
+    const hasRank = parseInt(reg.rank) > 0;
+    card.innerHTML = `
+      <div class="result-event-name">${reg.event}</div>
+      <div class="result-row">
+        <span class="result-label">Marks</span>
+        <span class="badge ${hasMarks ? '' : 'pending'}">${hasMarks ? reg.marks + '/10' : 'Pending'}</span>
+      </div>
+      <div class="result-row">
+        <span class="result-label">Rank</span>
+        <span class="badge ${hasRank ? 'rank' : 'no-rank'}">${hasRank ? '#' + reg.rank : '—'}</span>
+      </div>
+      ${reg.teamName ? `<div class="result-row"><span class="result-label">Team</span><span style="font-size:12px;color:var(--text)">${reg.teamName}</span></div>` : ''}
+    `;
+    grid.appendChild(card);
+  });
+}
+
+// ── LOGOUT ──
+function handleLogout() {
+  sessionStorage.removeItem('tq_student');
+  location.reload();
+}
+
+// ── TOAST ──
+function showToast(msg, type = 'success') {
+  const container = document.getElementById('toastContainer');
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  toast.innerHTML = `<span>${type === 'success' ? '✓' : '✗'}</span><span>${msg}</span>`;
+  container.appendChild(toast);
+  setTimeout(() => {
+    toast.style.animation = 'slideDown 0.3s ease forwards';
+    setTimeout(() => toast.remove(), 300);
+  }, 3000);
 }
 </script>
 </body>
